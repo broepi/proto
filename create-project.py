@@ -22,3 +22,6 @@ projectName = \""""+projectName+"""\"
 """)
 fs.close ()
 
+os.makedirs (srcDir)
+os.makedirs (buildDir)
+

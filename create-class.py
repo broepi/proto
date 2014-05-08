@@ -7,11 +7,15 @@ import sys
 execfile (os.path.dirname (os.path.realpath (__file__))+"/proto.py")
 
 # check arguments
-if len(sys.argv) != 3:
-	print "usage: script [<dir>/]<classname> [<dir>/]<superclass>"
+if len(sys.argv) < 2:
+	print "usage: script [<dir>/]<classname> [[<dir>/]<superclass>]"
 	sys.exit (-1)
 
-classPath, superPath = sys.argv[1:]
+if len(sys.argv) == 3:
+	classPath, superPath = sys.argv[1:]
+elif len(sys.argv) == 2:
+	classPath = sys.argv[1]
+	superPath = ""
 
 classPath = classPath.split ("/")
 className = classPath [-1]

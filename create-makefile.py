@@ -14,6 +14,7 @@ class Module:
 		self.depFiles = depFiles
 		self.srcPath = srcDir+"/"+self.name+".cpp"
 		self.objPath = buildDir+"/"+self.name+".o"
+		self.objDir = os.path.dirname (self.objPath)
 	
 	def __str__ (self):
 	
@@ -81,42 +82,54 @@ outf.write (
 all : """+target+"""
 rebuild : clean all
 clean :
-	-rm -R """+buildDir+"""/*.*
-	-rm -R """+buildDir+"""/*/*.*	
+	-rm -R """+buildDir+"""/*
 """)
 
+#
+# Main Target
+#
+outf.write ("# main target\n")
 outf.write (
 	target+" :"+
-	buildDir+"/"
 	" "+" ".join ([a.objPath for a in modules])+
 	"\n"
 )
 outf.write (
-	"\t"+CPP+" -o "+target+
+	"\t"+gpp+" -o "+target+
 	" "+extraLinkerOpts+
 	" "+" ".join([a.objPath for a in modules])+
 	" "+" ".join(["-l"+lib for lib in libs])+
 	"\n"
 )
 
-outf.write (
-	buildDir+"/ :\n"
-	"\tmkdir -p "+buildDir+"\n"
-)
-
+#
+# Object targets
+#
+outf.write ("# object targets\n")
 for module in modules:
 	outf.write (
 		module.objPath+" :"+
-		" "+buildDir+"/"+
+		" "+module.objDir+"/"+
 		" "+module.srcPath+
 		" "+" ".join (module.depFiles)+
 		"\n"
 	)
 	outf.write (
-		"\t"+CPP+" -o "+module.objPath+
+		"\t"+gpp+" -o "+module.objPath+
 		" -c "+module.srcPath+
 		" "+extraGppOpts+
 		"\n"
+	)
+
+#
+# object dir targets
+#
+outf.write ("# object dir targets\n")
+objDirs = set ([ mod.objDir for mod in modules ])
+for objDir in objDirs:
+	outf.write (
+		objDir+"/ :\n"+
+		"\tmkdir -p "+objDir+"\n"
 	)
 
 outf.close ()
