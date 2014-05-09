@@ -92,6 +92,7 @@ outf.write ("# main target\n")
 outf.write (
 	target+" :"+
 	" "+" ".join ([a.objPath for a in modules])+
+	" | "+buildDir+"/"+
 	"\n"
 )
 outf.write (
@@ -109,9 +110,9 @@ outf.write ("# object targets\n")
 for module in modules:
 	outf.write (
 		module.objPath+" :"+
-		" "+module.objDir+"/"+
 		" "+module.srcPath+
 		" "+" ".join (module.depFiles)+
+		" | "+module.objDir+"/"+
 		"\n"
 	)
 	outf.write (
