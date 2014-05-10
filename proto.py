@@ -1,3 +1,4 @@
+#!/usr/bin/python2
 
 srcDir = "src"
 buildDir = "build"
